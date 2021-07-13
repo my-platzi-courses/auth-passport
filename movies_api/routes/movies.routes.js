@@ -1,4 +1,5 @@
 const express = require('express');
+const passport = require('passport');
 const MoviesService = require('../services/movies');
 
 const {
@@ -9,8 +10,14 @@ const {
 
 const validationHandler = require('../utils/middleware/validationHandler');
 
-const cacheResponse = require('../utils/cacheResponse')
-const { FIVE_MINUTES_IN_SECONDS, SIXTY_MINUTES_IN_SECONDS } = require('../utils/time')
+const cacheResponse = require('../utils/cacheResponse');
+const {
+    FIVE_MINUTES_IN_SECONDS,
+    SIXTY_MINUTES_IN_SECONDS,
+} = require('../utils/time');
+
+// JWT strategy
+require('../utils/auth/strategies/jwt');
 
 function moviesApi(app) {
     const router = express.Router();
@@ -18,26 +25,31 @@ function moviesApi(app) {
 
     const moviesService = new MoviesService();
 
-    router.get('/', async function (req, res, next) {
-        cacheResponse(res, FIVE_MINUTES_IN_SECONDS)
-        const { tags } = req.query;
-        try {
-            const movies = await moviesService.getMovies({ tags });
-            // throw new Error('Error getting movies')
-            res.status(200).json({
-                data: movies,
-                message: 'movies listed',
-            });
-        } catch (err) {
-            next(err);
+    router.get(
+        '/',
+        passport.authenticate('jwt', { session: false }),
+        async function (req, res, next) {
+            cacheResponse(res, FIVE_MINUTES_IN_SECONDS);
+            const { tags } = req.query;
+            try {
+                const movies = await moviesService.getMovies({ tags });
+                // throw new Error('Error getting movies')
+                res.status(200).json({
+                    data: movies,
+                    message: 'movies listed',
+                });
+            } catch (err) {
+                next(err);
+            }
         }
-    });
+    );
 
     router.get(
         '/:movieId',
+        passport.authenticate('jwt', { session: false }),
         validationHandler({ movieId: movieIdSchema }),
         async function (req, res, next) {
-            cacheResponse(res, SIXTY_MINUTES_IN_SECONDS)
+            cacheResponse(res, SIXTY_MINUTES_IN_SECONDS);
             const { movieId } = req.params;
             try {
                 const movie = await moviesService.getMovie({ movieId });
@@ -53,6 +65,7 @@ function moviesApi(app) {
 
     router.post(
         '/',
+        passport.authenticate('jwt', { session: false }),
         validationHandler(createMovieSchema),
         async function (req, res, next) {
             try {
@@ -73,6 +86,7 @@ function moviesApi(app) {
 
     router.put(
         '/:movieId',
+        passport.authenticate('jwt', { session: false }),
         validationHandler({ movieId: movieIdSchema }),
         validationHandler(updateMovieSchema),
         async function (req, res, next) {
@@ -96,6 +110,7 @@ function moviesApi(app) {
 
     router.delete(
         '/:movieId',
+        passport.authenticate('jwt', { session: false }),
         validationHandler({ movieId: movieIdSchema }),
         async function (req, res, next) {
             try {

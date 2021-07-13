@@ -27,3 +27,27 @@ De esta manera en las peticiones siguientes nuestro Render Server o Admin Client
 La SPA, se va comunicar por medio del Render Server que va ser de Proxy. Para esta arquitectura es muy importante que la SPA tenga un servidor, por que toda la comunicación que sucede de los Access Token mediante el API Server debe ocurrir dentro del servidor.
 
 La manera en que la SPA se va comunicar el API Server, es mediante una Cookie que va tener el Access Token del Render Server.
+
+# Cómo conectarnos a la base de datos
+
+## Cómo conectarnos a la base de datos
+
+MongoDB Compass es un cliente con interfaz grafica que nos permiten conectarnos a nuestras instancias de Mongo DB y manipularlas de una manera más facil. Con este cliente nos podemos conectar a una instancia de cualquier servidor incluso una instancia de MongoDB Atlas.
+
+Para descargarlo se puede usar el siguiente enlace: https://www.mongodb.com/download-center/compass
+
+## Conexión usando MongoDB Compass
+
+Si nosotros copiamos el Mongo URI desde Mongo Atlas podemos conectarnos facilmente con MongoDB Compass:
+
+    Iniciamos sesion en MongoDB Atlas https://www.mongodb.com/cloud/atlas
+    Nos vamos a la sección de Clusters en el menu lateral izquierdo.
+    Seleccionamos connect en nuestro cluster sandbox.
+    Seleccionamos la opción Connect with MongoDB Compass.
+    Si no tenemos MongoDB Compass instalado, podemos descargarlo desde alli. Si ya lo tienes instalado continua con el paso 5.
+    Le damos click en el boton copy para copiar el Mongo URI.
+    Abrimos MongoDB Compass e inmediatamente va a reconocer nuestra URI que tenemos en el portapapeles.
+    Hacemos click en yes para que nos cree una nueva conexión, pero es necesario introduccir el password del usuario de la base de datos.
+    Podemos ponerle un nombre favorito y darle en Create favorite y luego en Connect.
+
+[mongodb-compass](/documentation/images/mongodb-compass.jpgmongodb-compass.png)
